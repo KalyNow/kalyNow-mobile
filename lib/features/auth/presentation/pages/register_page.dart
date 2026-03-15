@@ -37,11 +37,14 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
 
     if (!mounted) return;
     final state = ref.read(authNotifierProvider);
-    if (state is AuthAuthenticated) {
-      context.go('/home');
+    if (state is AuthRegistered) {
+      context.go('/email-verification', extra: state.email);
     } else if (state is AuthError) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(state.message)),
+        SnackBar(
+          backgroundColor: Colors.red.shade900,
+          content: Text(state.message),
+        ),
       );
     }
   }

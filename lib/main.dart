@@ -22,8 +22,9 @@ class KalyNowApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'KalyNow',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
+      theme: AppTheme.darkTheme,
       darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.dark,
       routerConfig: router,
     );
   }

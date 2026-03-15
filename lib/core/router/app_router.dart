@@ -2,21 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/auth/presentation/pages/email_verification_page.dart';
 import '../../features/auth/presentation/pages/home_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/restaurants/presentation/pages/restaurant_detail_page.dart';
+import '../../features/subscription/presentation/pages/subscription_page.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authNotifierProvider);
 
   return GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/home',
     redirect: (context, state) {
       final isAuthenticated = authState is AuthAuthenticated;
       final isAuthRoute = state.matchedLocation == '/login' ||
-          state.matchedLocation == '/register';
+          state.matchedLocation == '/register' ||
+          state.matchedLocation == '/email-verification';
 
       if (!isAuthenticated && !isAuthRoute) return '/login';
       if (isAuthenticated && isAuthRoute) return '/home';
@@ -34,6 +37,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const RegisterPage(),
       ),
       GoRoute(
+        path: '/email-verification',
+        name: 'email-verification',
+        builder: (context, state) => EmailVerificationPage(
+          email: state.extra as String? ?? '',
+        ),
+      ),
+      GoRoute(
         path: '/home',
         name: 'home',
         builder: (context, state) => const HomePage(),
@@ -44,6 +54,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => RestaurantDetailPage(
           restaurantId: state.pathParameters['id']!,
         ),
+      ),
+      GoRoute(
+        path: '/subscription',
+        name: 'subscription',
+        builder: (context, state) => const SubscriptionPage(),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

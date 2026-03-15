@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/network/dio_client.dart';
 import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/entities/user.dart';
@@ -13,7 +14,7 @@ import '../../domain/usecases/register_usecase.dart';
 // ---------------------------------------------------------------------------
 
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
-  return AuthRemoteDataSourceImpl();
+  return AuthRemoteDataSourceImpl(ref.watch(dioProvider));
 });
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
@@ -61,6 +62,12 @@ final class AuthUnauthenticated extends AuthState {
   const AuthUnauthenticated();
 }
 
+// Inscription réussie — email de vérification envoyé
+final class AuthRegistered extends AuthState {
+  final String email;
+  const AuthRegistered(this.email);
+}
+
 final class AuthError extends AuthState {
   final String message;
   const AuthError(this.message);
@@ -103,10 +110,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }) async {
     state = const AuthLoading();
     try {
-      final user = await _registerUseCase(
+      await _registerUseCase(
         RegisterParams(email: email, password: password, name: name),
       );
-      state = AuthAuthenticated(user);
+      state = AuthRegistered(email);
     } catch (e) {
       state = AuthError(e.toString());
     }

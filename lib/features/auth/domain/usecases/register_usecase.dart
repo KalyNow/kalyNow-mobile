@@ -1,5 +1,4 @@
 import '../../../../core/usecases/usecase.dart';
-import '../entities/user.dart';
 import '../repositories/auth_repository.dart';
 
 class RegisterParams {
@@ -14,13 +13,13 @@ class RegisterParams {
   });
 }
 
-class RegisterUseCase implements UseCase<User, RegisterParams> {
+class RegisterUseCase implements UseCase<void, RegisterParams> {
   final AuthRepository _repository;
 
   const RegisterUseCase(this._repository);
 
   @override
-  Future<User> call(RegisterParams params) {
+  Future<void> call(RegisterParams params) {
     return _repository.register(
       email: params.email,
       password: params.password,

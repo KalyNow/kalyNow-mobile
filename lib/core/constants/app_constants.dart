@@ -4,7 +4,7 @@ abstract final class AppConstants {
   static const String appVersion = '1.0.0';
 
   // API
-  static const String baseUrl = 'https://api.kalynow.com/v1';
+  static const String baseUrl = 'https://kalynow.mg/api/us';
   static const Duration connectTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);
 
